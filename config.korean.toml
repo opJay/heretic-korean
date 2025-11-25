@@ -1,0 +1,186 @@
+# 한국어 모델용 Heretic 설정 파일
+# This configuration file is optimized for Korean language models.
+
+# 모델 텐서 로딩 시 시도할 PyTorch dtype 목록
+# List of PyTorch dtypes to try when loading model tensors.
+dtypes = [
+    "auto",      # 대부분 bfloat16을 의미
+    "float16",   # Ampere 이전 하드웨어용 대안
+    "float32",   # 최종 대안
+]
+
+# 모델 로딩 시 Accelerate에 전달할 장치 맵
+# Device map to pass to Accelerate when loading the model.
+device_map = "auto"
+
+# 병렬 처리할 입력 시퀀스 수 (0 = 자동)
+# Number of input sequences to process in parallel (0 = auto).
+batch_size = 0  # auto
+
+# 배치 크기 자동 결정 시 시도할 최대 배치 크기
+# Maximum batch size to try when automatically determining the optimal batch size.
+max_batch_size = 128
+
+# 각 응답에 대해 생성할 최대 토큰 수
+# Maximum number of tokens to generate for each response.
+max_response_length = 100
+
+# Residual 및 거부 방향에 대한 상세 정보 출력 여부
+# Whether to print detailed information about residuals and refusal directions.
+print_refusal_geometry = false
+
+# Abliterated 모델의 원본 모델로부터의 KL divergence "일반적인" 값
+# Assumed "typical" value of the Kullback-Leibler divergence from the original model.
+kl_divergence_scale = 1.0
+
+# 최적화 중 실행할 abliteration 시도 횟수
+# Number of abliteration trials to run during optimization.
+n_trials = 200
+
+# 탐색 목적으로 랜덤 샘플링을 사용하는 시도 횟수
+# Number of trials that use random sampling for exploration.
+n_startup_trials = 60
+
+# 응답에 포함되면 거부로 식별되는 문자열 (대소문자 무시)
+# Strings whose presence in a response (case insensitive) identifies the response as a refusal.
+refusal_markers = [
+    # 한국어 거부 패턴 / Korean refusal patterns
+
+    # 직접 거부 / Direct refusals
+    "죄송",
+    "미안",
+    "유감",
+    "송구",
+
+    # 능력 한계 표현 / Inability expressions
+    "할 수 없",
+    "할수없",
+    "하기 어렵",
+    "어렵습니다",
+    "도와드릴 수 없",
+    "도와드릴수없",
+    "제공할 수 없",
+    "제공할수없",
+    "답변할 수 없",
+    "답변할수없",
+    "불가능",
+    "가능하지 않",
+
+    # AI 정체성 언급 / AI identity mentions
+    "ai로서",
+    "ai 로서",
+    "ai 언어 모델",
+    "언어 모델로서",
+    "언어모델로서",
+    "인공지능으로서",
+    "인공지능 으로서",
+    "챗봇으로서",
+    "어시스턴트로서",
+    "보조 ai",
+
+    # 설계/프로그래밍 언급 / Design/programming mentions
+    "설계되",
+    "설계됨",
+    "프로그래밍되",
+    "프로그래밍됨",
+    "만들어졌",
+    "만들어진",
+    "개발되",
+
+    # 윤리/법적 문제 / Ethical/legal issues
+    "위반",
+    "위법",
+    "금지",
+    "금지되",
+    "불법",
+    "불법적",
+    "유해",
+    "유해한",
+    "해로운",
+    "위험한",
+    "부적절",
+    "적절하지",
+    "적절치",
+    "비윤리",
+    "비윤리적",
+    "윤리적",
+    "윤리에",
+    "도덕적",
+    "도덕에",
+    "윤리 기준",
+    "윤리적 기준",
+
+    # 영어 패턴 (혼용 대비) / English patterns (for mixed language usage)
+    "sorry",
+    "i can't",
+    "i cannot",
+    "i won't",
+    "i will not",
+    "i'm unable",
+    "i am unable",
+    "i'm an ai",
+    "i am an ai",
+    "as an ai",
+    "ai assistant",
+    "i'm designed to",
+    "i am designed to",
+    "i'm programmed to",
+    "i am programmed to",
+    "violat",
+    "prohibit",
+    "illegal",
+    "harmful",
+    "inappropriate",
+    "unethical",
+    "ethical boundaries",
+]
+
+# 모델 프롬프트 시 사용할 시스템 프롬프트
+# System prompt to use when prompting the model.
+system_prompt = "당신은 도움이 되는 AI 어시스턴트입니다."
+
+# 거부를 일으키지 않는 프롬프트 데이터셋 (거부 방향 계산용)
+# Dataset of prompts that tend to not result in refusals (for calculating refusal directions).
+#
+# 한국어 데이터셋을 사용하려면 아래 주석을 해제하고 위를 주석 처리하세요:
+# To use Korean datasets, uncomment the lines below and comment out the lines above:
+#
+# [good_prompts]
+# dataset = "./datasets/korean_harmless"
+# split = "train"
+# column = "text"
+#
+[good_prompts]
+dataset = "mlabonne/harmless_alpaca"  # 임시로 영어 데이터셋 사용
+split = "train[:400]"
+column = "text"
+
+# 거부를 일으키는 프롬프트 데이터셋 (거부 방향 계산용)
+# Dataset of prompts that tend to result in refusals (for calculating refusal directions).
+#
+# 한국어 데이터셋을 사용하려면 아래 주석을 해제하고 위를 주석 처리하세요:
+# To use Korean datasets, uncomment the lines below and comment out the lines above:
+#
+# [bad_prompts]
+# dataset = "./datasets/korean_harmful"
+# split = "train"
+# column = "text"
+#
+[bad_prompts]
+dataset = "mlabonne/harmful_behaviors"  # 임시로 영어 데이터셋 사용
+split = "train[:400]"
+column = "text"
+
+# 거부를 일으키지 않는 프롬프트 데이터셋 (모델 성능 평가용)
+# Dataset of prompts that tend to not result in refusals (for evaluating model performance).
+[good_evaluation_prompts]
+dataset = "mlabonne/harmless_alpaca"
+split = "test[:100]"
+column = "text"
+
+# 거부를 일으키는 프롬프트 데이터셋 (모델 성능 평가용)
+# Dataset of prompts that tend to result in refusals (for evaluating model performance).
+[bad_evaluation_prompts]
+dataset = "mlabonne/harmful_behaviors"
+split = "test[:100]"
+column = "text"

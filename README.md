@@ -74,6 +74,44 @@ heretic --config config.korean.toml --model beomi/Llama-3-Open-Ko-8B
 - "AI로서", "언어 모델로서"
 - "불법", "유해", "부적절", "윤리적" 등
 
+**현재 상태:**
+- ✅ 한국어 거부 패턴 100% 지원 ([`config.korean.toml`](config.korean.toml))
+- ⚠️ 학습 데이터는 기본적으로 영어 사용 (다국어 모델에도 효과적)
+- 📦 한국어 데이터셋 준비 기능 제공 (아래 참조)
+
+### 한국어 데이터셋 준비 (선택사항)
+
+한국어 프롬프트로 학습하면 더 나은 결과를 얻을 수 있습니다.
+
+#### 로컬 데이터셋 생성
+
+```bash
+# 샘플 한국어 데이터셋 생성
+python scripts/create_korean_datasets.py
+
+# config.korean.toml 편집하여 로컬 데이터셋 사용
+# [good_prompts]
+# dataset = "./datasets/korean_harmless"
+# [bad_prompts]
+# dataset = "./datasets/korean_harmful"
+```
+
+#### 자신만의 데이터셋 추가
+
+1. `scripts/create_korean_datasets.py` 편집
+2. `harmless_prompts`와 `harmful_prompts` 리스트에 프롬프트 추가
+3. 스크립트 재실행
+
+#### Hugging Face로 공유 (향후)
+
+데이터셋이 충분히 검증되면 Hugging Face에 업로드하여 공유할 수 있습니다:
+
+```bash
+# 데이터셋 업로드 (예시)
+huggingface-cli login
+# ... 업로드 과정
+```
+
 ### 영어 및 다국어 모델 사용
 
 영어 모델은 기본 설정을 사용하세요:

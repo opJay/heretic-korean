@@ -17,3 +17,10 @@ wheels/
 
 # Configuration files
 /config.toml
+
+# Generated dataset files (but keep directory structure)
+datasets/*/dataset_info.json
+datasets/*/data/*.parquet
+datasets/*/*.arrow
+datasets/*/state.json
+!datasets/*/.gitkeep
