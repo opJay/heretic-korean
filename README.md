@@ -61,6 +61,26 @@ cd heretic-korean
 pip install -e .
 ```
 
+### 업데이트
+
+이미 heretic-korean을 설치한 경우, 다음 방법으로 최신 버전으로 업데이트하세요:
+
+**GitHub에서 직접 설치한 경우:**
+
+```bash
+pip install --upgrade git+https://github.com/opJay/heretic-korean.git@korean
+```
+
+**개발 모드로 설치한 경우:**
+
+```bash
+cd heretic-korean
+git pull origin korean
+# 개발 모드(-e)로 설치되어 있으면 코드 변경사항이 자동으로 반영됩니다
+# 필요한 경우에만 재설치:
+pip install -e .
+```
+
 ### 한국어 모델 사용
 
 한국어 모델의 경우 한국어 설정 파일(`config.korean.toml`)을 사용하세요:

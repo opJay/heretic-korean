@@ -1,7 +1,8 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Copyright (C) 2025  Philipp Emanuel Weidmann <pew@worldwidemann.com>
 
-from typing import Dict
+from pathlib import Path
+from typing import Any, Dict
 
 from pydantic import BaseModel, Field
 from pydantic_settings import (
@@ -10,6 +11,11 @@ from pydantic_settings import (
     SettingsConfigDict,
     TomlConfigSettingsSource,
 )
+
+try:
+    import tomllib
+except ImportError:
+    import tomli as tomllib  # For Python < 3.11
 
 
 class DatasetSpecification(BaseModel):
@@ -158,6 +164,11 @@ class Settings(BaseSettings):
         description="Dataset of prompts that tend to result in refusals (used for evaluating model performance).",
     )
 
+    config: str | None = Field(
+        default=None,
+        description="Path to TOML configuration file (default: config.toml).",
+    )
+
     # "Model" refers to the Pydantic model of the settings class here,
     # not to the language model. The field must have this exact name.
     model_config = SettingsConfigDict(
@@ -176,10 +187,30 @@ class Settings(BaseSettings):
         dotenv_settings: PydanticBaseSettingsSource,
         file_secret_settings: PydanticBaseSettingsSource,
     ) -> tuple[PydanticBaseSettingsSource, ...]:
+        # Get config from CLI arguments or environment variable
+        import sys
+
+        config_file = "config.toml"  # default
+
+        # Check CLI arguments for --config
+        for i, arg in enumerate(sys.argv):
+            if arg == "--config" and i + 1 < len(sys.argv):
+                config_file = sys.argv[i + 1]
+                break
+            elif arg.startswith("--config="):
+                config_file = arg.split("=", 1)[1]
+                break
+
+        # Check environment variable
+        import os
+
+        if "HERETIC_CONFIG" in os.environ:
+            config_file = os.environ["HERETIC_CONFIG"]
+
         return (
             init_settings,
             env_settings,
             dotenv_settings,
             file_secret_settings,
-            TomlConfigSettingsSource(settings_cls),
+            TomlConfigSettingsSource(settings_cls, toml_file=config_file),
         )
