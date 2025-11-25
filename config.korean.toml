@@ -79,13 +79,13 @@ refusal_markers = [
     "보조 ai",
 
     # 설계/프로그래밍 언급 / Design/programming mentions
-    "설계되",
-    "설계됨",
-    "프로그래밍되",
-    "프로그래밍됨",
-    "만들어졌",
-    "만들어진",
-    "개발되",
+    #"설계되",
+    #"설계됨",
+    #"프로그래밍되",
+    #"프로그래밍됨",
+    #"만들어졌",
+    #"만들어진",
+    #"개발되",
 
     # 윤리/법적 문제 / Ethical/legal issues
     "위반",
@@ -145,42 +145,28 @@ system_prompt = "당신은 도움이 되는 AI 어시스턴트입니다."
 # 한국어 데이터셋을 사용하려면 아래 주석을 해제하고 위를 주석 처리하세요:
 # To use Korean datasets, uncomment the lines below and comment out the lines above:
 #
-# [good_prompts]
-# dataset = "./datasets/korean_harmless"
-# split = "train"
-# column = "text"
-#
 [good_prompts]
-dataset = "mlabonne/harmless_alpaca"  # 임시로 영어 데이터셋 사용
-split = "train[:400]"
+dataset = "./datasets/korean_harmless_train"
+split = "None"  # 로컬 데이터셋은 "None" 사용 / Use "None" for local datasets
 column = "text"
 
 # 거부를 일으키는 프롬프트 데이터셋 (거부 방향 계산용)
 # Dataset of prompts that tend to result in refusals (for calculating refusal directions).
-#
-# 한국어 데이터셋을 사용하려면 아래 주석을 해제하고 위를 주석 처리하세요:
-# To use Korean datasets, uncomment the lines below and comment out the lines above:
-#
-# [bad_prompts]
-# dataset = "./datasets/korean_harmful"
-# split = "train"
-# column = "text"
-#
 [bad_prompts]
-dataset = "mlabonne/harmful_behaviors"  # 임시로 영어 데이터셋 사용
-split = "train[:400]"
+dataset = "./datasets/korean_harmful_train"
+split = "None"  # 로컬 데이터셋은 "None" 사용 / Use "None" for local datasets
 column = "text"
 
 # 거부를 일으키지 않는 프롬프트 데이터셋 (모델 성능 평가용)
 # Dataset of prompts that tend to not result in refusals (for evaluating model performance).
 [good_evaluation_prompts]
-dataset = "mlabonne/harmless_alpaca"
-split = "test[:100]"
+dataset = "./datasets/korean_harmless_eval"
+split = "None"  # 로컬 데이터셋은 "None" 사용 / Use "None" for local datasets
 column = "text"
 
 # 거부를 일으키는 프롬프트 데이터셋 (모델 성능 평가용)
 # Dataset of prompts that tend to result in refusals (for evaluating model performance).
 [bad_evaluation_prompts]
-dataset = "mlabonne/harmful_behaviors"
-split = "test[:100]"
+dataset = "./datasets/korean_harmful_eval"
+split = "None"  # 로컬 데이터셋은 "None" 사용 / Use "None" for local datasets
 column = "text"
