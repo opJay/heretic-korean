@@ -118,9 +118,10 @@ python scripts/create_korean_datasets.py
 
 #### 자신만의 데이터셋 추가
 
-1. `scripts/create_korean_datasets.py` 편집
-2. `harmless_prompts`와 `harmful_prompts` 리스트에 프롬프트 추가
-3. 스크립트 재실행
+1. CSV 파일 편집 (엑셀, 구글 시트, 텍스트 에디터 사용 가능)
+   - `data/korean_harmless_prompts.csv` - 무해한 프롬프트 추가
+   - `data/korean_harmful_prompts.csv` - 유해한 프롬프트 추가
+2. 스크립트 재실행: `python scripts/create_korean_datasets.py`
 
 #### Hugging Face로 공유 (향후)
 
