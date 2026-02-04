@@ -52,6 +52,21 @@ class Settings(BaseSettings):
         description="Device map to pass to Accelerate when loading the model.",
     )
 
+    max_memory: Dict[str, str] | None = Field(
+        default=None,
+        description="Maximum memory per device (e.g., {'0': '45GB', '1': '45GB', '2': '45GB', '3': '45GB', 'cpu': '0GB'}).",
+    )
+
+    load_in_8bit: bool = Field(
+        default=False,
+        description="Load model in 8-bit quantization mode (requires bitsandbytes library).",
+    )
+
+    load_in_4bit: bool = Field(
+        default=False,
+        description="Load model in 4-bit quantization mode (requires bitsandbytes library).",
+    )
+
     trust_remote_code: bool | None = Field(
         default=None,
         description="Whether to trust remote code when loading the model.",

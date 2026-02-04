@@ -58,11 +58,30 @@ class Model:
             print(f"* Trying dtype [bold]{dtype}[/]... ", end="")
 
             try:
+                # Build kwargs for model loading
+                load_kwargs = {
+                    "dtype": dtype,
+                    "device_map": settings.device_map,
+                    "trust_remote_code": self.trusted_models.get(settings.model),
+                }
+
+                # Add max_memory if configured
+                if settings.max_memory is not None:
+                    load_kwargs["max_memory"] = settings.max_memory
+
+                # Add quantization options (mutually exclusive)
+                if settings.load_in_8bit:
+                    load_kwargs["load_in_8bit"] = True
+                    # Remove dtype when using quantization
+                    load_kwargs.pop("dtype", None)
+                elif settings.load_in_4bit:
+                    load_kwargs["load_in_4bit"] = True
+                    # Remove dtype when using quantization
+                    load_kwargs.pop("dtype", None)
+
                 self.model = AutoModelForCausalLM.from_pretrained(
                     settings.model,
-                    dtype=dtype,
-                    device_map=settings.device_map,
-                    trust_remote_code=self.trusted_models.get(settings.model),
+                    **load_kwargs
                 )
 
                 # If we reach this point and the model requires trust_remote_code,
@@ -100,11 +119,28 @@ class Model:
         self.model = None
         empty_cache()
 
+        # Build kwargs for model loading
+        load_kwargs = {
+            "dtype": dtype,
+            "device_map": self.settings.device_map,
+            "trust_remote_code": self.trusted_models.get(self.settings.model),
+        }
+
+        # Add max_memory if configured
+        if self.settings.max_memory is not None:
+            load_kwargs["max_memory"] = self.settings.max_memory
+
+        # Add quantization options (mutually exclusive)
+        if self.settings.load_in_8bit:
+            load_kwargs["load_in_8bit"] = True
+            load_kwargs.pop("dtype", None)
+        elif self.settings.load_in_4bit:
+            load_kwargs["load_in_4bit"] = True
+            load_kwargs.pop("dtype", None)
+
         self.model = AutoModelForCausalLM.from_pretrained(
             self.settings.model,
-            dtype=dtype,
-            device_map=self.settings.device_map,
-            trust_remote_code=self.trusted_models.get(self.settings.model),
+            **load_kwargs
         )
 
         if self.trusted_models.get(self.settings.model) is None:

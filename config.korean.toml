@@ -13,6 +13,17 @@ dtypes = [
 # Device map to pass to Accelerate when loading the model.
 device_map = "auto"
 
+# 다중 GPU 메모리 할당 설정 (4x RTX A6000 환경용)
+# Maximum memory allocation per GPU (for 4x RTX A6000 setup)
+# 각 GPU에 45GB 할당 (48GB 중 여유분 고려)
+# Allocate 45GB per GPU (leaving headroom from 48GB total)
+[max_memory]
+"0" = "45GB"
+"1" = "45GB"
+"2" = "45GB"
+"3" = "45GB"
+"cpu" = "0GB"  # CPU 오프로드 방지 / Prevent CPU offloading
+
 # 병렬 처리할 입력 시퀀스 수 (0 = 자동)
 # Number of input sequences to process in parallel (0 = auto).
 batch_size = 0  # auto
